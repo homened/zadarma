@@ -11,6 +11,9 @@
             <input type="text" id="inputLogin" name="log" class="form-control" value="<?php print isset($_POST['log'])? htmlspecialchars($_POST['log']): ''; ?>" required autofocus>
             <label for="inputPassword">Пароль</label>
             <input type="password" id="inputPassword" name="pass" class="form-control" required>
+            <label for="inputCaptcha">Проверочный код (капча)</label>
+            <?php print $vars['captcha']; ?>
+            <input type="text" id="inputCaptcha" name="captcha" class="form-control" required>
             <br>
             <button class="btn btn-lg btn-primary btn-block" name="login" type="submit">Войти</button>
             <p><a href="./?controller=reg">Регистрация</a></p>

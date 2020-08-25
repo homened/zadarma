@@ -35,8 +35,8 @@ class model_users extends extModel {
             $res['errors'][] = 'Пароль не может быть пустым';
         } elseif(mb_strlen($pass, 'UTF-8') > 30) {
             $res['errors'][] = 'Пароль не может превышать 30 символов';
-        } elseif(!preg_match('/^[A-Za-zА-Яа-я0-9]+$/', $login)) {
-            $res['errors'][] = 'Пароль должен составлять только из букв и цифры';
+        } elseif(!preg_match('/^[A-Za-zА-Яа-я0-9]+$/', $pass)) {
+            $res['errors'][] = 'Пароль должен составлять только из букв и цифр';
         }
         if(mb_strlen($login, 'UTF-8') === 0) {
             $res['errors'][] = 'Логин не может быть пустым';

@@ -11,6 +11,7 @@ class controller_auth extends extController {
         $errors = array();
         $users = $this->core->models->users;
         $sessions = $this->core->models->sessions;
+        $captcha = $this->core->libraries->captcha;
         $session_key = $sessions->getSessionKey();
         $data_session = $sessions->getDataBySessionKey($session_key);
         if(!empty($data_session)) {
@@ -21,24 +22,28 @@ class controller_auth extends extController {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $login = isset($_POST['log'])? $_POST['log']: '';
             $pass = isset($_POST['pass'])? $_POST['pass']: '';
-            $res = $users->checkUser(
-                $login,
-                $pass
-            );
-            $errors = $res['errors'];
-
-            if(count($res['errors']) === 0 && $res['id'] > 0) {
-                $session_key = $sessions->generateSessionKey(
-                    $res['id'],
-                    $_SERVER['REMOTE_ADDR']
+            $captcha_val = isset($_POST['captcha'])? $_POST['captcha']: '';
+            if(!$captcha->check($captcha_val)) {
+                $errors[] = 'Неправильно введен проверочный код';
+            } else {
+                $res = $users->checkUser(
+                    $login,
+                    $pass
                 );
-                $sessions->setSessionKey($session_key);
-                $this->core->libraries->url->toController('list');
-            }
-            
+                $errors = $res['errors'];
+                if(count($res['errors']) === 0 && $res['id'] > 0) {
+                    $session_key = $sessions->generateSessionKey(
+                        $res['id'],
+                        $_SERVER['REMOTE_ADDR']
+                    );
+                    $sessions->setSessionKey($session_key);
+                    $this->core->libraries->url->toController('list');
+                }
+            } 
         }
         $this->core->libraries->views->show(CONSTRUCTOR_PATH . '/views/auth.tpl', array(
-            'errors'    => $errors
+            'errors'    => $errors,
+            'captcha'   => $captcha->generateCaptchaIMG()
         ));
     }
 }
