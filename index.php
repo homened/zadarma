@@ -19,5 +19,8 @@ if(isset($_GET['controller']) && !empty($_GET['controller'])) {
 } else {
     $core->controllers->auth->show();
 }
+if(1) {
+	print 1;
+}
 
 ?>
